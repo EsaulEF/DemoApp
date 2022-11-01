@@ -47,7 +47,7 @@ app.get("/exchange/restaurant/reservations/:email", async (req, res) => {
   const timestamp = req.headers['X-Ib-Exchange-Req-Timestamp'];
   const signature = req.headers['X-Ib-Exchange-Req-Signature'];
   const payload = req.body;
-
+console.log('hice algo')
  console.log(signature === generateSignature(timestamp+payload, signingSecret));
   const reservation = await getByEmail(req.params.email).catch((error) => {
     return res.status(500).json({ error });
