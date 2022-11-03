@@ -50,7 +50,7 @@ app.get("/exchange/restaurant/reservations/:email", async (req, res) => {
 console.log('hice algo')
  console.log(signature === generateSignature(timestamp+payload, signingSecret));
   const reservation = await getByEmail(req.params.email).catch((error) => {
-    return res.status(500).json({ error });
+    return res.status(200).json({ error });
   });
   return res.json(reservation);
 });
