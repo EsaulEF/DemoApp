@@ -55,7 +55,7 @@ console.log('hice algo')
   return res.json(reservation);
 });
 
-app.post("/exchange/restaurant/reservations", async (req, res) => {
+app.post("/exchange/restaurant/reservations/create", async (req, res) => {
   const timestamp = req.headers['X-Ib-Exchange-Req-Timestamp'];
   const signature = req.headers['X-Ib-Exchange-Req-Signature'];
   const payload = req.body;
