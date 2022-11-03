@@ -55,6 +55,18 @@ console.log('hice algo')
   return res.json(reservation);
 });
 
+app.post("/exchange/restaurant/reservations", async (req, res) => {
+  const timestamp = req.headers['X-Ib-Exchange-Req-Timestamp'];
+  const signature = req.headers['X-Ib-Exchange-Req-Signature'];
+  const payload = req.body;
+  console.log('hice algo')
+  console.log(signature === generateSignature(timestamp+payload, signingSecret));
+  const reservation = await getByEmail(req.body.email).catch((error) => {
+    return res.status(200).json({ error });
+  });
+  return res.json(reservation);
+});
+
 app.get("/exchange/restaurant/reservations", async (req, res) => {
   return res.json({ reservations: await getAllReservations() });
 });
