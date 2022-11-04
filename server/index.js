@@ -34,7 +34,7 @@ try {
 const generateSignature  = (data , key) => {
   let signature = ''
   try{
-    signature = crypto.createHash('sha256', key).update(data).digest("hex")
+    signature = crypto.createHash('sha256', key).update(data).digest("base64")
   }catch (e) {
 
   }
