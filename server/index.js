@@ -62,7 +62,7 @@ app.post("/exchange/restaurant/reservations/email", async (req, res) => {
   console.log('request ---- ',generateSignature(timestamp+payload, signingSecret), signingSecret, timestamp, signingSecret)
   console.log(signature === generateSignature(timestamp+payload, signingSecret));
   const reservation = await getByEmail(req.body.email).catch((error) => {
-    return res.status(200).json({ error });
+    return res.status(500).json({ error });
   });
   return res.json(reservation);
 });
