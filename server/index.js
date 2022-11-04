@@ -56,11 +56,11 @@ console.log('hice algo')
 });
 
 app.post("/exchange/restaurant/reservations/email", async (req, res) => {
-  const timestamp = req.headers['X-Ib-Exchange-Req-Timestamp'];
-  const signature = req.headers['X-Ib-Exchange-Req-Signature'];
+  const timestamp = req.headers['x-ib-exchange-req-timestamp'];
+  const signature = req.headers['x-ib-exchange-req-signature'];
   const payload = req.body;
   console.log('request ---- signature ',generateSignature(timestamp+payload, signingSecret), 'singing secret ', signingSecret, 'timestamp ', timestamp,'signature ', signature,  'headers ', req.headers)
-  console.log(signature === generateSignature(timestamp+payload, signingSecret));
+  console.log('------*--*-*-*-**-*- ',signature === generateSignature(timestamp+payload, signingSecret));
   const reservation = await getByEmail(req.body.email).catch((error) => {
     return res.status(500).json({ error });
   });
