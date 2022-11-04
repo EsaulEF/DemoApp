@@ -1,7 +1,7 @@
 {
   "reservations": [
     {
-      "host_email": "asd@asd.com",
+      "host_email": "test@test.com",
       "host_name": "asdasd",
       "hour": "15:16",
       "date": "10/6/2022",
