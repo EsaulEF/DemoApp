@@ -7,7 +7,8 @@ import {
   addReservation,
   getByEmail,
 } from "./database.js";
-import fs from 'fs';
+import fs from 'fs'
+import HmacSHA256 from 'crypto-js/hmac-sha256';
 
 const port = process.env.PORT || 3001;
 const app = express();
@@ -33,10 +34,9 @@ try {
 const generateSignature  = (data , key) => {
   let signature = ''
   try{
-    signature = CryptoJS.HmacSHA256(data, key);
-    console.log(signature)
-    signature = CryptoJS.enc.Hex.stringify(signature)
-    console.log(signature);
+    signature = HmacSHA256(data, key).toString('hex');
+    console.log(signature.toString('hex'))
+
   }catch (e) {
 
   }
