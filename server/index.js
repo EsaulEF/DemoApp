@@ -7,7 +7,7 @@ import {
   addReservation,
   getByEmail,
 } from "./database.js";
-import fs from 'fs'
+import fs from 'fs';
 
 const port = process.env.PORT || 3001;
 const app = express();
