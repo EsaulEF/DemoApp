@@ -34,7 +34,7 @@ try {
 const generateSignature  = (data , key) => {
   let signature = ''
   try{
-    signature = CryptoJS.HmacSHA256(data, key).toString("hex");
+    signature = CryptoJS.HmacSHA256(data, key).toString(CryptoJS.enc.Hex);
     //console.log(signature.digest().toString("hex"))
     //signature = CryptoJS.enc.Hex.stringify(signature);
     console.log(signature);
