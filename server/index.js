@@ -34,7 +34,7 @@ try {
 const generateSignature  = (data , key) => {
   let signature = ''
   try{
-    signature = crypto.createHmac('sha256', key).update(data).digest("hex")
+    signature = crypto.createHmac('sha256', data).update(key).digest("hex")
   }catch (e) {
 
   }
@@ -60,7 +60,7 @@ app.post("/exchange/restaurant/reservations/email", async (req, res) => {
   const signature = req.headers['x-ib-exchange-req-signature'];
   // payload = accountID
   const payload =  JSON.stringify(req.body);
-  console.log('request ---- signature ',timestamp+payload,' ', generateSignature(timestamp+payload, signingSecret)," ", signingSecret," ",timestamp+payload," ",  'signature ', signature)
+  console.log('request ---- payload ',timestamp+payload,' generate Signature  ', generateSignature(timestamp+payload, signingSecret)," signing secret ", signingSecret," ",  'signature ', signature)
   console.log('------*--*-*-*-**-*- ',signature === generateSignature(timestamp+payload, signingSecret));
   const reservation = await getByEmail(req.body.email).catch((error) => {
     return res.status(500).json({ error });
