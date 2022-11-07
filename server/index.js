@@ -8,7 +8,7 @@ import {
   getByEmail,
 } from "./database.js";
 import fs from 'fs';
-import crypto from 'crypto';
+import {CryptoJS} from 'crypto-js';
 
 const port = process.env.PORT || 3001;
 const app = express();
@@ -34,7 +34,10 @@ try {
 const generateSignature  = (data , key) => {
   let signature = ''
   try{
-    signature = crypto.createHmac('sha256', key).update(data).digest().toString("hex")
+    signature = CryptoJS.HmacSHA256(data, key);
+    console.log(signature.digest().toString("hex"))
+    signature = CryptoJS.enc.Hex.stringify(signature);
+    console.log(signature);
   }catch (e) {
 
   }
