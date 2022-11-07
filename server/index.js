@@ -8,7 +8,7 @@ import {
   getByEmail,
 } from "./database.js";
 import fs from 'fs';
-import * as CryptoJS from 'crypto-js';
+import * as CryptoJS from 'crypto';
 
 const port = process.env.PORT || 3001;
 const app = express();
