@@ -31,6 +31,13 @@ try {
   console.log(e)
 }
 
+const validateSignature = (request) => {
+  const timestamp = request.headers['x-ib-exchange-req-timestamp'];
+  const signature = request.headers['x-ib-exchange-req-signature'];
+  const payload =  JSON.stringify(request.body);
+  return signature === generateSignature((timestamp+payload).trim(), signingSecret.trim());
+}
+
 const generateSignature  = (data , key) => {
   let signature = ''
   try{
@@ -44,11 +51,6 @@ const generateSignature  = (data , key) => {
 app.use(express.json()); // to support JSON-encoded bodies
 
 app.get("/exchange/restaurant/reservations/:email", async (req, res) => {
-  const timestamp = req.headers['X-Ib-Exchange-Req-Timestamp'];
-  const signature = req.headers['X-Ib-Exchange-Req-Signature'];
-  const payload = req.body;
-console.log('hice algo')
- console.log(signature === generateSignature(timestamp+payload, signingSecret));
   const reservation = await getByEmail(req.params.email).catch((error) => {
     return res.status(200).json({ error });
   });
@@ -56,19 +58,11 @@ console.log('hice algo')
 });
 
 app.post("/exchange/restaurant/reservations/email", async (req, res) => {
-  const timestamp = req.headers['x-ib-exchange-req-timestamp'];
-  const signature = req.headers['x-ib-exchange-req-signature'];
-  //x-ib-exchange-req-accountkey
-  // payload = accountID
-  const payload =  JSON.stringify(req.body);
-  //console.log('*-*-*-*  headers ', JSON.stringify(req.headers))
-  //console.log('request ---- payload ',`${timestamp+payload}`," signing secret ", signingSecret)
-  //console.log(' generate Signature  ', generateSignature((timestamp+payload).trim(), signingSecret.trim())," ",  'signature ', signature)
-  //console.log('------*--*-*-*-**-*- ',signature === generateSignature(`${(timestamp+payload).trim()}`, `${signingSecret.trim()}`));
+
   const reservation = await getByEmail(req.body.email).catch((error) => {
     return res.status(500).json({ error });
   });
-  if (signature === generateSignature((timestamp+payload).trim(), signingSecret.trim())){
+  if (validateSignature(req)){
     return res.json(reservation);
   }else{
     return res.status(401).json({ error });
