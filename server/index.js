@@ -60,14 +60,18 @@ app.post("/exchange/restaurant/reservations/email", async (req, res) => {
   const signature = req.headers['x-ib-exchange-req-signature'];
   // payload = accountID
   const payload =  JSON.stringify(req.body);
+  console.log('*-*-*-*  headers ', JSON.stringify(req.headers))
   console.log('request ---- payload ',`${timestamp+payload}`," signing secret ", signingSecret)
   console.log(' generate Signature  ', generateSignature((timestamp+payload).trim(), signingSecret.trim())," ",  'signature ', signature)
   console.log('------*--*-*-*-**-*- ',signature === generateSignature(`${(timestamp+payload).trim()}`, `${signingSecret.trim()}`));
   const reservation = await getByEmail(req.body.email).catch((error) => {
     return res.status(500).json({ error });
   });
-  reservation.autentication = {"MySignature": generateSignature(timestamp+payload, signingSecret), 'HeaderSignature': signature}
-  return res.json(reservation);
+  if (signature === generateSignature((timestamp+payload).trim(), signingSecret.trim())){
+    return res.json(reservation);
+  }else{
+    return res.status(500).json({ error });
+  }
 });
 
 app.get("/exchange/restaurant/reservations", async (req, res) => {
