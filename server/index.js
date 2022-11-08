@@ -8,7 +8,7 @@ import {
   getByEmail,
 } from "./database.js";
 import fs from 'fs';
-import * as CryptoJS from 'crypto';
+import Crypto from 'crypto';
 
 const port = process.env.PORT || 3001;
 const app = express();
@@ -34,7 +34,7 @@ try {
 const generateSignature  = (data , key) => {
   let signature = ''
   try{
-    signature = CryptoJS.createHmac('sha256', key).update(data).digest('hex');
+    signature = Crypto.createHmac('sha256', key).update(data).digest('hex');
   }catch (e) {
 
   }
@@ -60,7 +60,8 @@ app.post("/exchange/restaurant/reservations/email", async (req, res) => {
   const signature = req.headers['x-ib-exchange-req-signature'];
   // payload = accountID
   const payload =  JSON.stringify(req.body);
-  console.log('request ---- payload ',timestamp+payload,' generate Signature  ', generateSignature(`${timestamp+payload}`, `${signingSecret}`)," signing secret ", signingSecret," ",  'signature ', signature)
+  console.log('request ---- payload ',`${timestamp+payload}`," signing secret ", signingSecret)
+  console.log(' generate Signature  ', generateSignature(`${timestamp+payload}`, `${signingSecret}`)," ",  'signature ', signature)
   console.log('------*--*-*-*-**-*- ',signature === generateSignature(`${timestamp+payload}`, `${signingSecret}`));
   const reservation = await getByEmail(req.body.email).catch((error) => {
     return res.status(500).json({ error });
