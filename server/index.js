@@ -19,26 +19,13 @@ if (process.env.NODE_ENV === "production") {
 createConnection();
 
 const signingSecretFile = process.cwd() + '/signingSecret.txt';
-const fakeSigningSecretFile = process.cwd() + '/fakeSigningSecret.txt';
-let signingSecret = ''
-let fakeSigningSecret = ''
+let signingSecret = '';
 try {
   fs.readFile(signingSecretFile, 'utf8', (err, data) => {
     if (err) {
       return;
     }
     signingSecret =  data;
-  });
-}catch (e) {
-  console.log(e)
-}
-
-try {
-  fs.readFile(fakeSigningSecretFile, 'utf8', (err, data) => {
-    if (err) {
-      return;
-    }
-    fakeSigningSecret =  data;
   });
 }catch (e) {
   console.log(e)
@@ -79,7 +66,6 @@ app.post("/exchange/restaurant/reservations/email", async (req, res) => {
     }else{
       return res.status(401).json({ error });
     }
-
 });
 
 app.get("/exchange/restaurant/reservations", async (req, res) => {
