@@ -48,7 +48,7 @@ const validateSignature = (request) => {
   const timestamp = request.headers['x-ib-exchange-req-timestamp'];
   const signature = request.headers['x-ib-exchange-req-signature'];
   const payload =  JSON.stringify(request.body);
-  return signature === generateSignature((timestamp+payload).trim(), req.body.email === 'test1@test.com' ? fakeSigningSecret.trim() : signingSecret.trim());
+  return signature === generateSignature((timestamp+payload).trim(), request.body.email === 'test1@test.com' ? fakeSigningSecret.trim() : signingSecret.trim());
 }
 
 const generateSignature  = (data , key) => {
