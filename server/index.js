@@ -64,7 +64,7 @@ app.post("/exchange/restaurant/reservations/email", async (req, res) => {
       });
       return res.json(reservation);
     }else{
-      return res.status(401).json({ });
+      return res.status(401).json({error: 'error' });
     }
 });
 
