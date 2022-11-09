@@ -37,7 +37,6 @@ const validateSignature = (request) => {
   const payload =  JSON.stringify(request.body);
   return signature === generateSignature((timestamp+payload).trim(), signingSecret.trim());
 }
-console.log('*-*-*');
 
 const generateSignature  = (data , key) => {
   let signature = ''
