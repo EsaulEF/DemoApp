@@ -19,7 +19,9 @@ if (process.env.NODE_ENV === "production") {
 createConnection();
 
 const signingSecretFile = process.cwd() + '/signingSecret.txt';
+const fakeSigningSecretFile = process.cwd() + '/fakeSigningSecret.txt';
 let signingSecret = ''
+let fakeSigningSecret = ''
 try {
   fs.readFile(signingSecretFile, 'utf8', (err, data) => {
     if (err) {
@@ -31,12 +33,22 @@ try {
   console.log(e)
 }
 
+try {
+  fs.readFile(fakeSigningSecretFile, 'utf8', (err, data) => {
+    if (err) {
+      return;
+    }
+    fakeSigningSecret =  data;
+  });
+}catch (e) {
+  console.log(e)
+}
+
 const validateSignature = (request) => {
   const timestamp = request.headers['x-ib-exchange-req-timestamp'];
   const signature = request.headers['x-ib-exchange-req-signature'];
   const payload =  JSON.stringify(request.body);
-  console.log('-*-* valid signature ', signature === generateSignature((timestamp+payload).trim(), signingSecret.trim()));
-  return signature === generateSignature((timestamp+payload).trim(), signingSecret.trim());
+  return signature === generateSignature((timestamp+payload).trim(), req.body.email === 'test1@test.com' ? fakeSigningSecret.trim() : signingSecret.trim());
 }
 
 const generateSignature  = (data , key) => {
@@ -59,15 +71,27 @@ app.get("/exchange/restaurant/reservations/:email", async (req, res) => {
 });
 
 app.post("/exchange/restaurant/reservations/email", async (req, res) => {
-
-  const reservation = await getByEmail(req.body.email).catch((error) => {
-    return res.status(500).json({ error });
-  });
-  if (validateSignature(req)){
-    return res.json(reservation);
+  if (req.body.email === 'test1@test.com'){
+    if (validateSignature(req)){
+      const reservation = await getByEmail(req.body.email).catch((error) => {
+        return res.status(500).json({ error });
+      });
+      return res.json(reservation);
+    }else{
+      return res.status(401).json({ error });
+    }
   }else{
-    return res.status(401).json({ error });
+    if (validateSignature(req)){
+      const reservation = await getByEmail(req.body.email).catch((error) => {
+        return res.status(500).json({ error });
+      });
+      return res.json(reservation);
+    }else{
+      return res.status(401).json({ error });
+    }
   }
+
+
 });
 
 app.get("/exchange/restaurant/reservations", async (req, res) => {
